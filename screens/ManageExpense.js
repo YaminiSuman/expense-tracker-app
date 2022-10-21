@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import IconButton from "../components/ui/IconButton";
-import Button from "../components/ui/Button";
 import { GlobalStyles } from "../constants/styles";
 import {
   addNewExpense,
@@ -32,22 +31,18 @@ function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
-  function confirmHandler() {
+  function confirmHandler(expenseData ) {
     if (isEditing) {
       dispatch(
         updateExpense({
           id: editedExpenseId,
-          description: "Test Update!!!!",
-          amount: 29.99,
-          date: new Date("2022-10-20"),
+          expenseData,
         })
       );
     } else {
       dispatch(
         addNewExpense({
-          description: "Test Add",
-          amount: 19.99,
-          date: new Date("2022-05-19"),
+          expenseData,
         })
       );
     }
@@ -56,15 +51,12 @@ function ManageExpense({ route, navigation }) {
 
   return (
     <View style={styles.container}>
-      <ExpenseForm/>
-      <View style={styles.buttons}>
-        <Button style={styles.button} mode="flat" onPress={cancelHandler}>
-          Cancel
-        </Button>
-        <Button style={styles.button} onPress={confirmHandler}>
-          {isEditing ? "Update" : "Add"}
-        </Button>
-      </View>
+      <ExpenseForm
+        submitButtonLabel={isEditing ? "Update" : "Add"}
+        onCancel={cancelHandler}
+        onSubmit={confirmHandler}
+      />
+
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -87,15 +79,7 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: GlobalStyles.colors.primary800,
   },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
-  },
+
   deleteContainer: {
     marginTop: 16,
     paddingTop: 8,
