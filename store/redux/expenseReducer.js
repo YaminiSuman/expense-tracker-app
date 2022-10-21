@@ -68,12 +68,16 @@ const expenseSlice = createSlice({
       state.expenses.push({ ...action.payload, id: id });
     },
     removeExpense: (state, action) => {
-      const expenseIdToBeUpdated = state.expenses.indexOf(action.payload.id);
-      state.expenses.splice(state.expenses.indexOf(action.payload.id), 1);
-     
+      const indexOfItemToBeDeleted = state.expenses.findIndex(
+        (exp) => exp.id === action.payload.id
+      );
+      state.expenses.splice(indexOfItemToBeDeleted, 1);
     },
     updateExpense: (state, action) => {
-      state.expenses.splice(state.expenses.indexOf(action.payload.id), 0,action.payload);
+      const indexOfItemToBeUpdated = state.expenses.findIndex(
+        (exp) => exp.id === action.payload.id
+      );
+      state.expenses.splice(indexOfItemToBeUpdated, 1, action.payload);
     },
   },
 });

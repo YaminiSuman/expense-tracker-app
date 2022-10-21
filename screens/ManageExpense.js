@@ -38,7 +38,7 @@ function ManageExpense({ route, navigation }) {
           id: editedExpenseId,
           description: "Test Update!!!!",
           amount: 29.99,
-          date: new Date("2022-05-20"),
+          date: new Date("2022-10-20"),
         })
       );
     } else {

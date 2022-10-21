@@ -5,7 +5,6 @@ import { getDateMinusDays } from "../util/date";
 
 function RecentExpense() {
   const expenses = useSelector((state) => state.expenseReducer.expenses);
-
   const recentExpenses = expenses.filter((expense) => {
     const today = new Date();
     const date7DaysAgo = getDateMinusDays(today, 7);
@@ -14,7 +13,11 @@ function RecentExpense() {
   });
 
   return (
-    <ExpensesOutput expenses={recentExpenses} expensesPeriod="Last 7 Days" />
+    <ExpensesOutput
+      expenses={recentExpenses}
+      expensesPeriod="Last 7 Days"
+      fallbackText="No registered expenses in last 7 days!"
+    />
   );
 }
 
