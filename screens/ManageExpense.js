@@ -10,6 +10,7 @@ import {
   removeExpense,
   updateExpense,
 } from "../store/redux/expenseReducer";
+import { storeExpense } from "../util/http";
 
 function ManageExpense({ route, navigation }) {
   const editedExpenseId = route.params?.expenseId;
@@ -46,6 +47,7 @@ function ManageExpense({ route, navigation }) {
           expenseData,
         })
       );
+      storeExpense(expenseData);
     }
     navigation.goBack();
   }
