@@ -33,7 +33,7 @@ function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData ) {
+  async function confirmHandler(expenseData ) {
     if (isEditing) {
       dispatch(
         updateExpense({
@@ -42,12 +42,12 @@ function ManageExpense({ route, navigation }) {
         })
       );
     } else {
+      const id = await storeExpense(expenseData);
       dispatch(
         addNewExpense({
-          expenseData,
+          ...expenseData,id:id
         })
       );
-      storeExpense(expenseData);
     }
     navigation.goBack();
   }

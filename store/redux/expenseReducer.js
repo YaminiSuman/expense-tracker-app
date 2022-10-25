@@ -64,9 +64,9 @@ const expenseSlice = createSlice({
   },
   reducers: {
     addNewExpense: (state, action) => {
-      const id = new Date().toString() + Math.random().toString();
-      console.log("exp format", action.payload.expenseData);
-      state.expenses.push({ ...action.payload.expenseData, id: id });
+      // const id = new Date().toString() + Math.random().toString();
+      console.log("exp format", action.payload);
+      state.expenses.unshift({ ...action.payload });
     },
     removeExpense: (state, action) => {
       const indexOfItemToBeDeleted = state.expenses.findIndex(
