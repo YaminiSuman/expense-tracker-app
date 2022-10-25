@@ -1,7 +1,8 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
+import LoadingOverlay from "../components/ui/LoadingOverlay";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import IconButton from "../components/ui/IconButton";
 import { GlobalStyles } from "../constants/styles";
@@ -10,13 +11,22 @@ import {
   removeExpense,
   updateExpense,
 } from "../store/redux/expenseReducer";
-import { storeExpense, updateExpenseServer, deleteExpenseServer } from "../util/http";
+import {
+  storeExpense,
+  updateExpenseServer,
+  deleteExpenseServer,
+} from "../util/http";
 
 function ManageExpense({ route, navigation }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
 
-  const defaultExpenses = useSelector((state) => state.expenseReducer.expenses.find(expense => expense.id === editedExpenseId));
+  const defaultExpenses = useSelector((state) =>
+    state.expenseReducer.expenses.find(
+      (expense) => expense.id === editedExpenseId
+    )
+  );
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
@@ -26,6 +36,7 @@ function ManageExpense({ route, navigation }) {
   }, [navigation, isEditing]);
 
   async function deleteExpenseHandler() {
+    setIsSubmitting(true);
     await deleteExpenseServer(editedExpenseId);
     dispatch(removeExpense({ id: editedExpenseId }));
     navigation.goBack();
@@ -34,9 +45,10 @@ function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
-  async function confirmHandler(expenseData ) {
+  async function confirmHandler(expenseData) {
+    setIsSubmitting(true);
     if (isEditing) {
-      await updateExpenseServer(editedExpenseId,expenseData);
+      await updateExpenseServer(editedExpenseId, expenseData);
       dispatch(
         updateExpense({
           id: editedExpenseId,
@@ -47,11 +59,16 @@ function ManageExpense({ route, navigation }) {
       const id = await storeExpense(expenseData);
       dispatch(
         addNewExpense({
-          ...expenseData,id:id
+          ...expenseData,
+          id: id,
         })
       );
     }
     navigation.goBack();
+  }
+
+  if (isSubmitting) {
+    return <LoadingOverlay />;
   }
 
   return (
