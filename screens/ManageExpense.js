@@ -10,7 +10,7 @@ import {
   removeExpense,
   updateExpense,
 } from "../store/redux/expenseReducer";
-import { storeExpense } from "../util/http";
+import { storeExpense, updateExpenseServer, deleteExpenseServer } from "../util/http";
 
 function ManageExpense({ route, navigation }) {
   const editedExpenseId = route.params?.expenseId;
@@ -25,7 +25,8 @@ function ManageExpense({ route, navigation }) {
     });
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() {
+  async function deleteExpenseHandler() {
+    await deleteExpenseServer(editedExpenseId);
     dispatch(removeExpense({ id: editedExpenseId }));
     navigation.goBack();
   }
@@ -35,6 +36,7 @@ function ManageExpense({ route, navigation }) {
 
   async function confirmHandler(expenseData ) {
     if (isEditing) {
+      await updateExpenseServer(editedExpenseId,expenseData);
       dispatch(
         updateExpense({
           id: editedExpenseId,
