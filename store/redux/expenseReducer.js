@@ -64,8 +64,6 @@ const expenseSlice = createSlice({
   },
   reducers: {
     addNewExpense: (state, action) => {
-      // const id = new Date().toString() + Math.random().toString();
-      console.log("exp format", action.payload);
       state.expenses.unshift({ ...action.payload });
     },
     removeExpense: (state, action) => {
@@ -75,17 +73,18 @@ const expenseSlice = createSlice({
       state.expenses.splice(indexOfItemToBeDeleted, 1);
     },
     updateExpense: (state, action) => {
+      const itemToBeUpdated = { ...action.payload.expenseData, id: action.payload.id }
       const indexOfItemToBeUpdated = state.expenses.findIndex(
         (exp) => exp.id === action.payload.id
       );
+
       state.expenses.splice(
         indexOfItemToBeUpdated,
         1,
-        action.payload.expenseData
+        itemToBeUpdated
       );
     },
     setExpenseFromBackend: (state, action) => {
-      console.log("*** setting response in backend***")
       const expDataFromBackend = action.payload.expenses.reverse();
       state.expenses.push(...expDataFromBackend);
     }
